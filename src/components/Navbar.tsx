@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Home, User, Briefcase, Settings, Mail } from 'lucide-react'
 import { NavBar } from "@/components/ui/tubelight-navbar"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
@@ -11,13 +11,8 @@ import Link from "next/link";
 
 export default function Navbar() {
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const isDark = mounted ? resolvedTheme === "dark" : false;
+  // page.tsx ya garantiza que Navbar solo se renderiza cuando está montado
+  const isDark = resolvedTheme === "dark";
 
   const navItems = [
     { name: 'Inicio', url: '#inicio', icon: Home },
@@ -44,7 +39,7 @@ export default function Navbar() {
               priority
               className={cn(
                 "object-contain transition-all duration-500 w-16 sm:w-20", 
-                mounted ? (isDark ? "brightness-110 contrast-125" : "brightness-100") : "opacity-0"
+                isDark ? "brightness-110 contrast-125" : "brightness-100"
               )}
             />
           </Link>

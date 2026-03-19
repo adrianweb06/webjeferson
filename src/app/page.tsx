@@ -19,25 +19,30 @@ export default function Home() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Aseguramos que el componente esté montado para evitar Hydration Mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const isDark = mounted ? resolvedTheme === "dark" : false;
+  // Mientras no esté montado, forzamos un fondo negro para que coincida con el defaultTheme="dark"
+  // Esto evita el "flicker" o la mezcla de temas al cargar por primera vez
+  if (!mounted) {
+    return (
+      <main className="min-h-screen bg-black" aria-hidden="true" />
+    );
+  }
+
+  const isDark = resolvedTheme === "dark";
 
   return (
     <main className={cn(
       "min-h-screen relative transition-colors duration-500", 
-      mounted ? (isDark ? "bg-black" : "bg-white") : "bg-white"
+      isDark ? "bg-black" : "bg-white"
     )}>
-      {/* Fondo de alto rendimiento */}
       <PerformanceBackground />
       
       <Navbar />
       <Hero />
       
-      {/* Contenido en capas transparentes sobre el fondo fijo */}
       <div className="relative z-10">
         <About />
         <MissionVision />
